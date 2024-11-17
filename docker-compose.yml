@@ -1,0 +1,27 @@
+services:
+  mysql:
+    container_name: mysql-mach
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 351995
+    volumes:
+      - mysql:/data/mysql
+    ports:
+      - 3333:3306
+    networks:
+      - spring-demo #! tên của network
+    restart: unless-stopped
+  mail-dev:
+    container_name: mail-dev-mach-leong
+    image: maildev/maildev
+    ports:
+      - 1080:1080
+      - 1025:1025      
+networks: #!
+  spring-demo:
+    driver: bridge  #! khi mà ứng dụng chạy trong mạng cần giao tiếp với các container khác nhau trên cùng 1 máy chủ
+
+volumes:
+  mysql: #! volume này được khai báo ở cấp Volumes cao nhất để Docker có thể quản lý, và chia sẻ giữa các service nếu cần
+    #! phải chỉ định driver không thì ứng dụng sẽ không hoạt động
+    driver: local  #! driver xác định cách Docker lưu trữ dữ liệu cho volume này. Mặc định là local, nghĩa là dữ liệu sẽ được lưu trữ trên máy chủ vật lý nơi Docker đang chạy.
