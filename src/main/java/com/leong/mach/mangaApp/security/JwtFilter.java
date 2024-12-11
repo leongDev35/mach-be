@@ -46,6 +46,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
         jwt = authHeader.substring(7); //! nếu có trích xuất jwt từ header
         userEmail = jwtService.extractUsername(jwt); //! rút trích email của người dùng từ jwtService
+
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) { //! nếu email người dùng khác null và trong SecurityContextHolder không có authentication 
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail); //! tải chi tiết người dùng bằng UserDetailsService
             if (jwtService.isTokenValid(jwt, userDetails)) { //! kiểm tra tính hợp lệ của JWT, nếu hợp lệ thì 

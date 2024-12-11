@@ -1,20 +1,24 @@
 package com.leong.mach.mangaApp.manga;
 
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.leong.mach.mangaApp.AltTitle.AltTitle;
 
 import jakarta.validation.constraints.NotNull;
 
 public record MangaRequest(
     @NotNull(message = "Name is mandatory") String name,
-    List<Integer> listGenreId,
-    List<Integer> listThemeId,
-    List<Integer> listAuthorId,
-    List<Integer> listArtistId,
-    @JsonFormat(pattern = "dd-MM-yyyy") 
-    LocalDate releaseDate,
+    List<String> listTags,
+    List<String> listAuthor,
+    List<String> listArtist,
+    List<AltTitle> altTitles,
+    ContentRating contentRating,
+    PublicationStatus publicationStatus,
+    String originalLanguage,
+    Year releaseYear,
     String description,
     String coverImage
 ) {

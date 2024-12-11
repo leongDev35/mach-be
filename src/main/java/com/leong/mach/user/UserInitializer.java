@@ -9,7 +9,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.leong.mach.mangaApp.theme.ThemeRepository;
 import com.leong.mach.role.Role;
 import com.leong.mach.role.RoleRepository;
 

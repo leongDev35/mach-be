@@ -14,21 +14,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.leong.mach.mangaApp.chapter.Chapter;
+import com.leong.mach.mangaApp.manga.Manga;
 import com.leong.mach.role.Role;
 import com.leong.mach.walletApp.wallet.Wallet;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -76,6 +66,10 @@ Principal {
 
     @OneToMany(mappedBy = "user")
     private List<Wallet> wallets;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Manga> mangas;
 
     @JsonIgnore
     @OneToMany(mappedBy = "uploadByUser")

@@ -32,8 +32,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-        //! theo mặc định sẽ tìm Bean corsFilter để làm filter
-                .cors(withDefaults())         // ! Cross Origin Resource Sharing cho phép chia sẻ tài nguyên giữa các trang không cùng domain
+                // ! theo mặc định sẽ tìm Bean corsFilter để làm filter
+                .cors(withDefaults()) // ! Cross Origin Resource Sharing cho phép chia sẻ tài nguyên giữa các trang
+                                      // không cùng domain
                 // ! để bật tính năng csrf
                 .csrf(AbstractHttpConfigurer::disable) // ! Cross-site Request Forgery: Tắt tính năng csrf
                 .authorizeHttpRequests(req -> req.requestMatchers(
@@ -50,7 +51,7 @@ public class SecurityConfig {
                         "/swagger-ui.html").permitAll() // ! list url này được cho phép
                         .anyRequest()
                         .permitAll()
-                // .authenticated() //! test nên tạm tắt authen
+                        // .authenticated() // ! test nên tạm tắt authen
                 ) // ! tất cả còn lại phải xác thực
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)

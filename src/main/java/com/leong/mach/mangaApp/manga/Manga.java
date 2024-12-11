@@ -2,21 +2,24 @@ package com.leong.mach.mangaApp.manga;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.leong.mach.mangaApp.artist.Artist;
-import com.leong.mach.mangaApp.author.Author;
+import com.leong.mach.mangaApp.AltTitle.AltTitle;
 import com.leong.mach.mangaApp.chapter.Chapter;
-import com.leong.mach.mangaApp.genres.Genre;
-import com.leong.mach.mangaApp.theme.Theme;
+import com.leong.mach.mangaApp.creater.mangaCreaterRole.MangaCreaterRole;
+import com.leong.mach.mangaApp.tag.Tag;
+import com.leong.mach.user.User;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,17 +27,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Year;
 import java.util.List;
 import static jakarta.persistence.FetchType.EAGER;
-
-enum TransactionType {
-        ONGOING,
-        COMPLETED,
-        HIATUS, // ! bị gián đoạn
-        CANCELLED
-}
 
 @Getter
 @Setter
@@ -49,31 +44,49 @@ public class Manga {
 
         @Column(unique = true)
         private String name;
-        @JsonFormat(pattern = "dd-MM-yyyy")
-        private LocalDate releaseDate;
+        @Column(name = "release_year")
+        private Year releaseYear;
         private String description;
         private String coverImage;
+
+        @Column(name = "original_language", nullable = false)
+        private String originalLanguage;
+
+        @Enumerated(EnumType.STRING)
+        @Column(name = "content_rating", nullable = false)
+        private ContentRating contentRating;
+
+        @Enumerated(EnumType.STRING)
+        @Column(name = "publication_status", nullable = false)
+        private PublicationStatus publicationStatus;
+
         @OneToMany(mappedBy = "manga")
         @JsonIgnore
         private List<Chapter> chapters;
 
         @ManyToMany(fetch = EAGER, cascade = CascadeType.MERGE) // ! quan trọng
-        @JoinTable(name = "manga_genre", // ! tên bảng
+        @JoinTable(name = "manga_tag", // ! tên bảng
                         joinColumns = @JoinColumn(name = "manga_id"), // ! liên kết với khóa ngoại của bảng đầu
-                        inverseJoinColumns = @JoinColumn(name = "genre_id") // ! liên kết với khóa ngoại của bảng chính
-                                                                            // thứ 2
+                        inverseJoinColumns = @JoinColumn(name = "tag_id") // ! liên kết với khóa ngoại của bảng chính
+                                                                          // thứ 2
         )
-        private List<Genre> genres;
+        private List<Tag> tags;
 
-        @ManyToMany(fetch = EAGER, cascade = CascadeType.MERGE)
-        @JoinTable(name = "manga_theme", joinColumns = @JoinColumn(name = "manga_id"), inverseJoinColumns = @JoinColumn(name = "theme_id"))
-        private List<Theme> themes;
+        @OneToMany(mappedBy = "manga", cascade = CascadeType.ALL)
+        private List<MangaCreaterRole> createrRoles;
 
-        @ManyToMany(fetch = EAGER, cascade = CascadeType.MERGE)
-        @JoinTable(name = "manga_author", joinColumns = @JoinColumn(name = "manga_id"), inverseJoinColumns = @JoinColumn(name = "author_id"))
-        private List<Author> authors;
+        @OneToMany(mappedBy = "manga", cascade = CascadeType.ALL)
+        private List<AltTitle> altTitles;
 
-        @ManyToMany(fetch = EAGER, cascade = CascadeType.MERGE)
-        @JoinTable(name = "manga_artist", joinColumns = @JoinColumn(name = "manga_id"), inverseJoinColumns = @JoinColumn(name = "artist_id"))
-        private List<Artist> artists;
+        @ManyToOne
+        @JoinColumn(name = "user_id", nullable = false)
+        private User user;
+
+        public void addMangaCreaterRole(MangaCreaterRole mangaCreaterRole) {
+                this.createrRoles.add(mangaCreaterRole);
+        }
+
+        public void addAltTitleList(AltTitle title) {
+                this.altTitles.add(title);
+        }
 }
