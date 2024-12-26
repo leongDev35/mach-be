@@ -86,6 +86,7 @@ public class AuthenticationService {
             var jwtToken = jwtService.generateToken(claims, (User) auth.getPrincipal());
             return AuthenticationResponse.builder()
                     .token(jwtToken) // ! trả về 1 token cho Client
+                    .id(user.getId())
                     .avatarUrl(user.getAvatarUrl())
                     .fullname(user.fullName())
                     .build();

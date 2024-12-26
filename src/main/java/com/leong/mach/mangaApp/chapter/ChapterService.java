@@ -5,6 +5,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.leong.mach.mangaApp.AltTitle.AltTitle;
+import com.leong.mach.mangaApp.page.Page;
+
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +22,14 @@ public class ChapterService {
 
     public Chapter save(ChapterRequest request) {
         Chapter chapter = chapterMapper.toChapter(request);
+
+        for (Page page : request.pages()) {
+            Page newPage = Page.builder()
+                    .chapter(chapter)
+                    .imageUrl(page.getImageUrl())
+                    .build();
+            chapter.addPage(newPage);
+        }
         return chapterRepository.save(chapter);
     }
 

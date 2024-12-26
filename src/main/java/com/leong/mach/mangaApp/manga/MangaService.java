@@ -46,7 +46,6 @@ public class MangaService {
     }
 
     public Integer save(MangaRequest request, User user) throws MessagingException {
-        System.out.println(user.getEmail());
         Manga manga = mangaMapper.toManga(request);
         manga.setUser(user);
         List<String> mergedList = mergeLists(request.listAuthor(), request.listArtist());
