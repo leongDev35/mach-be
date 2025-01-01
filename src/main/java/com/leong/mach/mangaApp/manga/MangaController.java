@@ -48,7 +48,11 @@ public class MangaController {
             @PathVariable("manga-id") Integer mangaId) {
         return ResponseEntity.ok(mangaService.findById(mangaId));
     }
-
+    @GetMapping("/name/{manga-id}")
+    public ResponseEntity<MangaResponse> findNameMangaById(
+            @PathVariable("manga-id") Integer mangaId) {
+        return ResponseEntity.ok(mangaService.findNameMangaById(mangaId));
+    }
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<MangaResponse>> getMangasByUserId(@PathVariable Integer userId) {
         List<MangaResponse> mangas = mangaService.getMangasByUserId(userId);

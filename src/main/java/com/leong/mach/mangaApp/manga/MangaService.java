@@ -36,7 +36,6 @@ public class MangaService {
     public static List<String> mergeLists(List<String> listAuthor, List<String> listArtist) {
         // Tạo Set để gộp và loại bỏ phần tử trùng lặp
         Set<String> mergedSet = new HashSet<>();
-
         // Thêm tất cả phần tử từ listAuthor và listArtist vào Set
         mergedSet.addAll(listAuthor);
         mergedSet.addAll(listArtist);
@@ -91,6 +90,12 @@ public class MangaService {
 
         mangaRepository.save(manga);
         return manga.getId();
+    }
+
+    public MangaResponse findNameMangaById(Integer mangaId) {
+        return mangaRepository.findById(mangaId)
+                .map(mangaMapper::toMangaResponseOnlyNameManga)
+                .orElseThrow(() -> new EntityNotFoundException("No book found with ID: " + mangaId));
     }
 
     public MangaResponse findById(Integer mangaId) {
