@@ -4,6 +4,8 @@ spring:
   servlet:
     multipart:
       max-file-size: 50MB #! đặt giới hạn kích thước tối đa cho một file được tải lên thông qua các yêu cầu HTTP multipart
+  jackson:
+    time-zone: UTC #! đặt múi giờ mặc định cho các đối tượng Date và Time trong ứng dụng là UTC    
 springdoc:
   default-produces-media-type: application/json #! đặt application/json làm loại phương tiện (media type) mặc định mà các endpoint trong API sẽ trả về. Điều này có nghĩa là, nếu không có chỉ định khác, API của bạn sẽ trả về dữ liệu ở định dạng JSON
 server:

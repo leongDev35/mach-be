@@ -29,6 +29,9 @@ public class Page {
     @Column(nullable = false)
     private String imageUrl;
 
+    @Column(nullable = false)
+    private Integer pageOrder; // Số thứ tự của trang trong Chapter
+
     @ManyToOne
     @JoinColumn(name = "chapter_id", nullable = false)
     private Chapter chapter;

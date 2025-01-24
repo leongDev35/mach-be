@@ -3,13 +3,16 @@ package com.leong.mach.mangaApp.chapter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.leong.mach.mangaApp.AltTitle.AltTitle;
+import com.leong.mach.common.CommonFunc;
+import com.leong.mach.common.TimeAgoUtil;
 import com.leong.mach.mangaApp.manga.Manga;
 import com.leong.mach.mangaApp.manga.MangaRepository;
 import com.leong.mach.mangaApp.page.Page;
+import com.leong.mach.mangaApp.page.PageMapper;
 import com.leong.mach.user.User;
 import com.leong.mach.user.UserMapper;
 import com.leong.mach.user.UserRepository;
@@ -17,7 +20,7 @@ import com.leong.mach.user.UserResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-    
+
 @Service
 @RequiredArgsConstructor
 public class ChapterMapper {
@@ -28,7 +31,7 @@ public class ChapterMapper {
 
     public Chapter toChapter(ChapterRequest request) {
         Optional<User> userOptional = userRepository.findById(request.uploadUserId());
-    
+
         List<Page> emptyPages = new ArrayList<>();
 
         if (!userOptional.isPresent()) {
@@ -47,18 +50,36 @@ public class ChapterMapper {
                 .chapterNumber(request.chapterNumber())
                 .uploadByUser(userOptional.get())
                 .manga(manga)
-                .pages(emptyPages)      
+                .pages(emptyPages)
                 .build();
 
     }
 
-    public ChapterResponse toChapterResponse(Chapter chapter) {
-        UserResponse userResponse = userMapper.toUserResponse(chapter.getUploadByUser());
+    public static ChapterResponse toChapterResponse(Chapter chapter) {
+        UserResponse userResponse = UserMapper.toUserResponse(chapter.getUploadByUser());
         return ChapterResponse.builder()
+                .id(chapter.getId())
                 .name(chapter.getName())
+                .language(CommonFunc.COUNTRY_FLAG_MAP.get("Vietnamese"))
                 .chapterNumber(chapter.getChapterNumber())
-                .releaseDate(chapter.getReleaseDate())
-                .manga(chapter.getManga())
+                .releaseDate(TimeAgoUtil.timeAgo(chapter.getReleaseDate()))
+                .user(userResponse)
+                .build();
+    }
+
+    public static List<ChapterResponse> toChapterResponseList(List<Chapter> chapters) {
+        return chapters.stream()
+                .map(ChapterMapper::toChapterResponse)
+                .collect(Collectors.toList());
+    }
+
+    public static ChapterResponse toChapterDetail(Chapter chapter) {
+        UserResponse userResponse = UserMapper.toUserResponse(chapter.getUploadByUser());
+        return ChapterResponse.builder()
+                .id(chapter.getId())
+                .name(chapter.getName())
+                .pages(PageMapper.toListPageResponse(chapter.getPages()))
+                .chapterNumber(chapter.getChapterNumber())
                 .user(userResponse)
                 .build();
     }

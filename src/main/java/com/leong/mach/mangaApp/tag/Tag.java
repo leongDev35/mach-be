@@ -6,7 +6,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -48,7 +47,8 @@ public class Tag {
         CONTENT_WARNING,
         FORMAT,
         GENRE,
-        THEME
+        THEME,
+        DEMOGRAPHIC
     }
 
     @ManyToMany(mappedBy =  "tags")

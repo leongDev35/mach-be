@@ -20,7 +20,7 @@ public record ChapterRequest(
         String chapterName,
         @NotNull(message = "Chapter number is mandatory")
         Integer chapterNumber,
-        LocalDate releaseDate,
+        LocalDateTime releaseDate,
         Integer uploadUserId,
         Integer mangaId,
         List<Page> pages) {

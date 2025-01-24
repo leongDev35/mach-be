@@ -39,7 +39,7 @@ public class Chapter {
 
         private Integer chapterNumber;
 
-        private LocalDate releaseDate;
+        private LocalDateTime releaseDate;
 
         @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL)
         @JsonIgnore
@@ -47,8 +47,10 @@ public class Chapter {
 
         @ManyToOne
         @JoinColumn(name = "user_id")
+        @JsonIgnore
         private User uploadByUser;
 
+        @JsonIgnore
         @ManyToOne
         @JoinColumn(name = "manga_id")
         private Manga manga;

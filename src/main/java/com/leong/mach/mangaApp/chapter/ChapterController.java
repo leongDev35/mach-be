@@ -3,6 +3,8 @@ package com.leong.mach.mangaApp.chapter;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.leong.mach.mangaApp.manga.MangaResponse;
+
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +30,13 @@ public class ChapterController {
         return ResponseEntity.ok(chapterService.save(request));
     }
 
-    @GetMapping("path")
-    public String getMethodName(@RequestParam String param) {
-        return new String();
+   @GetMapping("/{chapter-id}")
+    public ResponseEntity<ChapterResponse> findChapterById(
+            @PathVariable("chapter-id") Integer chapterId) {
+        return ResponseEntity.ok(chapterService.findById(chapterId));
     }
 
-    @GetMapping("/{manga-id}")
+    @GetMapping("/manga/{manga-id}")
     public List<ChapterResponse> getAllChapterInManga(@PathVariable("manga-id") Integer mangaId) {
 
         return chapterService.getAllChapterInManga(mangaId);
