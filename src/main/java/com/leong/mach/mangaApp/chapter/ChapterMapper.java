@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.leong.mach.common.CommonFunc;
 import com.leong.mach.common.TimeAgoUtil;
 import com.leong.mach.mangaApp.manga.Manga;
+import com.leong.mach.mangaApp.manga.MangaMapper;
 import com.leong.mach.mangaApp.manga.MangaRepository;
 import com.leong.mach.mangaApp.page.Page;
 import com.leong.mach.mangaApp.page.PageMapper;
@@ -67,11 +68,42 @@ public class ChapterMapper {
                 .build();
     }
 
+    public static ChapterResponse toChapterResponseInChapterPage(Chapter chapter) {
+        return ChapterResponse.builder()
+                .id(chapter.getId())
+                .chapterNumber(chapter.getChapterNumber())
+                .build();
+    }
+
     public static List<ChapterResponse> toChapterResponseList(List<Chapter> chapters) {
         return chapters.stream()
                 .map(ChapterMapper::toChapterResponse)
                 .collect(Collectors.toList());
     }
+
+    public static ChapterResponse toChapterResponseInLastestUpdate(Chapter chapter) {
+        return ChapterResponse.builder()
+                .id(chapter.getId())
+                .chapterNumber(chapter.getChapterNumber())
+                .name(chapter.getName())
+                .manga(MangaMapper.toMangaResponseInLatestUpdate(chapter.getManga()))
+                .releaseDate(TimeAgoUtil.timeAgo(chapter.getReleaseDate()))
+                .language(CommonFunc.COUNTRY_FLAG_MAP.get("Vietnamese"))
+                .build();
+    }
+
+    public static List<ChapterResponse> toChapterResponseListInLastestUpdate(List<Chapter> chapters) {
+        return chapters.stream()
+                .map(ChapterMapper::toChapterResponseInLastestUpdate)
+                .collect(Collectors.toList());
+    }
+
+    public static List<ChapterResponse> toChapterResponseListInChapterPage(List<Chapter> chapters) {
+        return chapters.stream()
+                .map(ChapterMapper::toChapterResponseInChapterPage)
+                .collect(Collectors.toList());
+    }
+
 
     public static ChapterResponse toChapterDetail(Chapter chapter) {
         UserResponse userResponse = UserMapper.toUserResponse(chapter.getUploadByUser());
@@ -79,6 +111,7 @@ public class ChapterMapper {
                 .id(chapter.getId())
                 .name(chapter.getName())
                 .pages(PageMapper.toListPageResponse(chapter.getPages()))
+                .manga(MangaMapper.toMangaResponseInChapterPage(chapter.getManga()))
                 .chapterNumber(chapter.getChapterNumber())
                 .user(userResponse)
                 .build();

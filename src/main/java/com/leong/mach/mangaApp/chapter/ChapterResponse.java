@@ -4,6 +4,7 @@ package com.leong.mach.mangaApp.chapter;
 import java.util.List;
 
 import com.leong.mach.mangaApp.manga.Manga;
+import com.leong.mach.mangaApp.manga.MangaResponse;
 import com.leong.mach.mangaApp.page.PageResponse;
 import com.leong.mach.user.UserResponse;
 
@@ -25,5 +26,5 @@ public class ChapterResponse {
     private String language;
     private UserResponse user;
     private List<PageResponse> pages;
-    private Manga manga;
+    private MangaResponse manga;
 }

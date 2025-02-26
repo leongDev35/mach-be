@@ -28,6 +28,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.List;
 import static jakarta.persistence.FetchType.EAGER;
@@ -42,7 +43,6 @@ public class Manga {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Integer id;
-
         @Column(unique = true)
         private String name;
         @Column(name = "release_year")
@@ -51,6 +51,7 @@ public class Manga {
         @Column(columnDefinition = "TEXT")
         private String description;
         private String coverImage;
+        private LocalDateTime releaseAddedDate;
 
         @Column(name = "original_language", nullable = false)
         private String originalLanguage;

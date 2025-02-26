@@ -29,6 +29,8 @@ spring:
   output:
     ansi:
       enabled: ALWAYS #! enable set log color
+  jackson:
+    default-property-inclusion: NON_NULL  #! không hiển thị các trường null
 application:
   security:
     jwt:

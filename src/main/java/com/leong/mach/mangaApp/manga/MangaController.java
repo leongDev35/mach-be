@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.leong.mach.common.ApiResponse;
 import com.leong.mach.mangaApp.chapter.Chapter;
+import com.leong.mach.mangaApp.manga.mangaDTO.MangaBasicDTO;
+import com.leong.mach.mangaApp.manga.mangaDTO.RecentlyAdded;
+import com.leong.mach.mangaApp.manga.mangaDTO.SearchDTO;
 import com.leong.mach.user.User;
 import com.leong.mach.user.UserRepository;
 
@@ -32,6 +35,17 @@ public class MangaController {
     private final MangaService mangaService;
     private final UserRepository userRepository;
 
+
+    @GetMapping("")
+    public ResponseEntity<List<MangaResponse>> getAllManga() {
+        return ResponseEntity.ok(mangaService.getAllManga());
+    }
+    
+    @GetMapping("/recently-added")
+    public List<RecentlyAdded> getRecentlyAddedManga() {
+        return mangaService.getRecentlyAddedManga();
+    }
+    
     @PostMapping("")
     public ResponseEntity<?> saveManga(@Valid @RequestBody MangaRequest request, Principal principal)
             throws MessagingException {
@@ -52,6 +66,12 @@ public class MangaController {
     public ResponseEntity<MangaResponse> findNameMangaById(
             @PathVariable("manga-id") Integer mangaId) {
         return ResponseEntity.ok(mangaService.findNameMangaById(mangaId));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<SearchDTO> findNameMangaByName(
+        @RequestParam String name) {
+        return ResponseEntity.ok(mangaService.findMangaByName(name));
     }
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<MangaResponse>> getMangasByUserId(@PathVariable Integer userId) {

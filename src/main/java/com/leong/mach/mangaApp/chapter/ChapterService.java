@@ -3,6 +3,7 @@ package com.leong.mach.mangaApp.chapter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.leong.mach.mangaApp.AltTitle.AltTitle;
@@ -23,8 +24,15 @@ public class ChapterService {
     private final ChapterMapper chapterMapper;
 
     public Chapter save(ChapterRequest request) {
+        //! check if chapter number already exist, return error if exist
+        boolean isChapterExist = chapterRepository.existsByMangaIdAndUploadByUserIdAndChapterNumber(request.mangaId(), request.uploadUserId(),request.chapterNumber());
+        System.out.println("isChapterExist");
+        System.out.println(isChapterExist);
+        if (isChapterExist) {
+            throw new RuntimeException("Chapter already exist");
+        }
+        //! end check
         Chapter chapter = chapterMapper.toChapter(request);
-
         for (Page page : request.pages()) {
             Page newPage = Page.builder()
                     .chapter(chapter)
@@ -44,7 +52,13 @@ public class ChapterService {
         return chapterRepository.findByMangaId(mangaId).stream()
                 .map(ChapterMapper::toChapterResponse)
                 .collect(Collectors.toList());
+    }
 
+    public List<ChapterResponse> getLatestChaptersForMangas() {
+
+        return chapterRepository.findLatestChaptersForMangas(PageRequest.of(0, 32)).stream()
+                .map(ChapterMapper::toChapterResponseInLastestUpdate)
+                .collect(Collectors.toList());
     }
 
 }

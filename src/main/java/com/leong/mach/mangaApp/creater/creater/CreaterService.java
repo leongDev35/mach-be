@@ -14,26 +14,24 @@ public class CreaterService {
 
     private final CreaterRepository createrRepository;
 
-
     public Creater createCreater(CreaterRequest request) {
         Boolean createrCheck = createrRepository.findByName(request.name()).isPresent();
         if (createrCheck) {
             throw new IllegalStateException("Creater with name '" + request.name() + "' already exists.");
         }
         var creater = Creater.builder()
-        .name(request.name())
-        .build();
+                .name(request.name())
+                .build();
         return createrRepository.save(creater);
     }
 
-     public List<Creater> findCreaterByName(String name) {
+    public List<Creater> findCreaterByName(String name) {
         return createrRepository.findByNameContainingIgnoreCase(name, PageRequest.of(0, 5));
     }
 
     public boolean doesCreaterExist(String name) {
         return createrRepository.findByName(name).isPresent();
     }
-
 
     public List<Creater> getAllCreaters() {
         return createrRepository.findAll();

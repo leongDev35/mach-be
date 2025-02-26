@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,9 @@ import com.leong.mach.mangaApp.creater.mangaCreaterRole.MangaCreaterRole;
 // import com.leong.mach.mangaApp.creater.mangaCreaterRole.MangaCreaterRole.Role;
 import com.leong.mach.mangaApp.creater.mangaCreaterRole.MangaCreaterRoleRepository;
 import com.leong.mach.mangaApp.creater.mangaCreaterRole.Role;
+import com.leong.mach.mangaApp.manga.mangaDTO.MangaBasicDTO;
+import com.leong.mach.mangaApp.manga.mangaDTO.RecentlyAdded;
+import com.leong.mach.mangaApp.manga.mangaDTO.SearchDTO;
 import com.leong.mach.user.User;
 
 import jakarta.mail.MessagingException;
@@ -32,6 +36,18 @@ public class MangaService {
     private final MangaMapper mangaMapper;
     private final CreaterRepository createrRepository;
     private final MangaCreaterRoleRepository mangaCreaterRoleRepository;
+
+    public List<MangaResponse> getAllManga() {
+        return mangaRepository.findAll(PageRequest.of(0, 10)).stream()
+                .map(MangaMapper::toMangaResponseWithTag)
+                .collect(Collectors.toList());
+    }
+
+    public List<RecentlyAdded> getRecentlyAddedManga() {
+
+        // return null; 
+        return mangaMapper.toRecentlyAddedList(mangaRepository.findRecentlyAddedManga(PageRequest.of(0, 15)));
+    }
 
     public static List<String> mergeLists(List<String> listAuthor, List<String> listArtist) {
         // Tạo Set để gộp và loại bỏ phần tử trùng lặp
@@ -96,6 +112,17 @@ public class MangaService {
         return mangaRepository.findById(mangaId)
                 .map(mangaMapper::toMangaResponseOnlyNameManga)
                 .orElseThrow(() -> new EntityNotFoundException("No book found with ID: " + mangaId));
+    }
+
+    public SearchDTO findMangaByName(String name) {
+        List<MangaBasicDTO> mangas = mangaRepository.findByNameContainingIgnoreCase(name, PageRequest.of(0, 5));
+        List<Creater> creaters = createrRepository.findByNameContainingIgnoreCase(name, PageRequest.of(0, 5));
+
+        return SearchDTO.builder()
+                .mangas(mangas)
+                .creaters(creaters)
+                .build();
+
     }
 
     public MangaResponse findById(Integer mangaId) {
